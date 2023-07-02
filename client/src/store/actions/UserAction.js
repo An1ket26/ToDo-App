@@ -1,3 +1,5 @@
+import { openAlertMessage } from "./alertActions";
+
 export const authActions = {
     SET_USER_DETAILS: "AUTH.SET_USER_DETAILS",
 };
@@ -26,9 +28,10 @@ const login=(userDetails,history)=>{
             },
             body:JSON.stringify(userDetails)
         })
-        if(response.error)
+        if(!response.ok)
         {
-            console.log("error");
+            const text = await response.text();
+            dispatch(openAlertMessage(text));
         }
         else
         {
@@ -50,9 +53,10 @@ const register=(userDetails,history)=>{
             },
             body:JSON.stringify(userDetails)
         })
-        if(response.error)
+        if(!response.ok)
         {
-            console.log("error");
+            const text = await response.text();
+            dispatch(openAlertMessage(text));
         }
         else
         {

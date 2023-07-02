@@ -1,3 +1,4 @@
+import { useState,useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -13,12 +14,26 @@ import { getActions } from "../store/actions/UserAction";
 import {connect} from "react-redux";
 
 const SignIn=({login})=> {
+  const [validate,setValidate]=useState(false);
+  const [mail,setMail]=useState("");
+  const [password,setPassword]=useState("");
+
+  useEffect(()=>{
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const etest=  emailPattern.test(mail);
+    const ptest =password.length > 5 && password.length < 13;
+    setValidate(etest && ptest)
+  },[mail,password,setValidate])
+
+  const handleMail=(e)=>{
+    setMail(e.target.value);
+  }
+  const handlePassword=(e)=>{
+    setPassword(e.target.value);
+  }
   const history=useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-      const mail= data.get("email");
-      const password= data.get("password");
       const UserDetails={
         mail,
         password
@@ -49,6 +64,7 @@ const SignIn=({login})=> {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={handleMail}
           />
           <TextField
             margin="normal"
@@ -59,6 +75,7 @@ const SignIn=({login})=> {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handlePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -69,6 +86,7 @@ const SignIn=({login})=> {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={!validate}
           >
             Sign In
           </Button>

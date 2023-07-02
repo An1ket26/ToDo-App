@@ -3,6 +3,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import {BrowserRouter as Router,Route,Routes,Navigate} from "react-router-dom"
+import AlertNotification from "./shared/AlertNotification";
+
 function App() {
   return (
     <>
@@ -15,6 +17,7 @@ function App() {
           <Route path='*' element={<Navigate to='/home' />} />
         </Routes>
       </Router>
+      <AlertNotification/>
     </>
   );
 }

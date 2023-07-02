@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -15,12 +15,31 @@ import {connect} from "react-redux";
 
 const SignIn=({register})=> {
   const history=useNavigate();
+  const [validate,setValidate]=useState(false);
+  const [mail,setMail]=useState("");
+  const [password,setPassword]=useState("");
+  const [username,setUsername]=useState("");
+
+
+  useEffect(()=>{
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const etest=  emailPattern.test(mail);
+    const ptest =password.length > 5 && password.length < 13;
+    const utest=username.length > 5 && username.length < 20;
+    setValidate(etest && ptest && utest)
+  },[mail,password,username,setValidate])
+
+  const handleMail=(e)=>{
+    setMail(e.target.value);
+  }
+  const handlePassword=(e)=>{
+    setPassword(e.target.value);
+  }
+  const handleUsername=(e)=>{
+    setUsername(e.target.value);
+  }
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const username=data.get("name");
-    const mail= data.get("email");
-      const password= data.get("password");
       const UserDetails={
         username,
         mail,
@@ -52,6 +71,8 @@ const SignIn=({register})=> {
             type="text"
             id="name"
             autoComplete="name"
+            autoFocus
+            onChange={handleUsername}
           />
           <TextField
             margin="normal"
@@ -61,7 +82,7 @@ const SignIn=({register})=> {
             label="Email Address"
             name="email"
             autoComplete="email"
-            autoFocus
+            onChange={handleMail}
           />
           <TextField
             margin="normal"
@@ -72,6 +93,7 @@ const SignIn=({register})=> {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handlePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -82,6 +104,7 @@ const SignIn=({register})=> {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={!validate}
           >
             Sign Up
           </Button>
